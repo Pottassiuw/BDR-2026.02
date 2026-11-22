@@ -9,7 +9,7 @@ Query OK, 0 rows affected (0.00 sec)
 SET @com = (SELECT id FROM usuarios WHERE cargo = 'COMERCIAL' AND ativo ORDER BY nome LIMIT 1)
 --------------
 
-Query OK, 0 rows affected (0.00 sec)
+Query OK, 0 rows affected (0.01 sec)
 
 --------------
 INSERT INTO tickets (id, titulo, descricao, categoria, prioridade, sla_em, projeto_id, aberto_por_id)
@@ -28,7 +28,7 @@ SELECT titulo, prioridade, status, criado_em, sla_em,
 +------------------------------+------------+--------------+-------------------------+-------------------------+-----------+
 | titulo                       | prioridade | status       | criado_em               | sla_em                  | horas_sla |
 +------------------------------+------------+--------------+-------------------------+-------------------------+-----------+
-| Queda total do link da torre | CRITICA    | EM_ANDAMENTO | 2026-11-22 17:05:40.983 | 2026-11-23 01:05:40.983 |         8 |
+| Queda total do link da torre | CRITICA    | EM_ANDAMENTO | 2026-11-22 17:09:23.615 | 2026-11-23 01:09:23.615 |         8 |
 +------------------------------+------------+--------------+-------------------------+-------------------------+-----------+
 1 row in set (0.00 sec)
 

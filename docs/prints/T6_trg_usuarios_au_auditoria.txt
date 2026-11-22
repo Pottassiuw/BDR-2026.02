@@ -2,7 +2,7 @@
 SET @u = (SELECT id FROM usuarios WHERE cargo = 'TECNICO' AND equipe_id IS NULL ORDER BY nome LIMIT 1)
 --------------
 
-Query OK, 0 rows affected (0.00 sec)
+Query OK, 0 rows affected (0.01 sec)
 
 --------------
 SET @eq = (SELECT id FROM equipes WHERE ativo ORDER BY nome LIMIT 1)
@@ -45,8 +45,8 @@ SELECT tipo, descricao FROM atividades_conta WHERE usuario_id = @u ORDER BY cria
 +--------+---------------------------------------------------------+
 | tipo   | descricao                                               |
 +--------+---------------------------------------------------------+
-| CONTA  | Conta desativada.                                       |
 | EQUIPE | Equipe alterada de (nenhuma) para Automação Campinas.   |
+| CONTA  | Conta desativada.                                       |
 | CONTA  | Senha redefinida (provisória).                          |
 | CONTA  | Cargo alterado de Técnico para Gestor.                  |
 | CONTA  | Conta reativada.                                        |

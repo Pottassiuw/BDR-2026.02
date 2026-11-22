@@ -17,7 +17,7 @@ UPDATE tickets
  WHERE id = @tk
 --------------
 
-Query OK, 1 row affected (0.01 sec)
+Query OK, 1 row affected (0.00 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 
 --------------
@@ -36,7 +36,7 @@ SELECT evento, descricao FROM historico_ticket
 | evento               | descricao                                                         |
 +----------------------+-------------------------------------------------------------------+
 | RESPONSAVEL_ALTERADO | Responsável alterado de (ninguém) para William Ferreira Castro.   |
-| SLA_ALTERADO         | Prazo do SLA alterado de 23/11/2026 01:05 para 24/11/2026 01:05.  |
+| SLA_ALTERADO         | Prazo do SLA alterado de 23/11/2026 01:09 para 24/11/2026 01:09.  |
 | STATUS_ALTERADO      | Status alterado de EM_ANDAMENTO para SOLICITACAO_ENCERRAMENTO.    |
 +----------------------+-------------------------------------------------------------------+
 3 rows in set (0.00 sec)

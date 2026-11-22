@@ -22,4 +22,4 @@ SELECT equipe,
 | Manutenção São Paulo    |     100.00 |          100.00 |
 | Redes Campinas          |       NULL |          100.00 |
 +-------------------------+------------+-----------------+
-12 rows in set (0.02 sec)
+12 rows in set (0.01 sec)

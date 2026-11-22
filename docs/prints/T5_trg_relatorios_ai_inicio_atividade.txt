@@ -25,7 +25,7 @@ VALUES ('Diagnóstico inicial: fonte do equipamento queimada, substituída.', '1
         'Retorno amanhã para teste final.', @tk, @tec)
 --------------
 
-Query OK, 1 row affected (0.01 sec)
+Query OK, 1 row affected (0.00 sec)
 
 --------------
 SELECT status FROM tickets WHERE id = @tk
