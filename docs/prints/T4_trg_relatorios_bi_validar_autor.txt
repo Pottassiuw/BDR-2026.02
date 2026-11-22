@@ -1,0 +1,49 @@
+--------------
+SET @tk = (SELECT id FROM tickets WHERE status = 'EM_ANDAMENTO' ORDER BY criado_em LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @fora = (SELECT u.id FROM usuarios u WHERE u.cargo = 'TECNICO' AND u.ativo AND u.equipe_id IS NOT NULL
+               AND u.equipe_id NOT IN (SELECT equipe_id FROM ticket_equipes WHERE ticket_id = @tk)
+             ORDER BY u.nome LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+INSERT INTO relatorios (trabalho_realizado, materiais_utilizados, outros_detalhes, ticket_id, autor_id)
+VALUES ('Tentativa de relatório por técnico de fora.', '-', '-', @tk, @fora)
+--------------
+
+ERROR 1644 (45000) at line 7: Autor inativo ou sua equipe não está alocada neste ticket.
+--------------
+SET @enc = (SELECT t.id FROM tickets t WHERE t.status = 'ENCERRADO' ORDER BY t.criado_em LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @dentro = (SELECT u.id FROM usuarios u JOIN ticket_equipes te ON te.equipe_id = u.equipe_id
+                WHERE te.ticket_id = @enc AND u.ativo AND u.cargo = 'TECNICO' LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+INSERT INTO relatorios (trabalho_realizado, materiais_utilizados, outros_detalhes, ticket_id, autor_id)
+VALUES ('Relatório em ticket já encerrado.', '-', '-', @enc, @dentro)
+--------------
+
+ERROR 1644 (45000) at line 12: Ticket encerrado não recebe novos relatórios.
+--------------
+SELECT COUNT(*) AS relatorios_gravados_nos_testes FROM relatorios WHERE criado_em >= NOW() - INTERVAL 1 MINUTE
+--------------
+
++--------------------------------+
+| relatorios_gravados_nos_testes |
++--------------------------------+
+|                              0 |
++--------------------------------+
+1 row in set (0.00 sec)

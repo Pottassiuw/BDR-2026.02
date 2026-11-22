@@ -1,0 +1,61 @@
+--------------
+SELECT t.id, p.gestor_id INTO @tk1, @gestor1 FROM tickets t JOIN projetos p ON p.id = t.projeto_id
+ WHERE t.status = 'SOLICITACAO_ENCERRAMENTO' ORDER BY t.criado_em LIMIT 1
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+SELECT t.id, p.gestor_id INTO @tk2, @gestor2 FROM tickets t JOIN projetos p ON p.id = t.projeto_id
+ WHERE t.status = 'SOLICITACAO_ENCERRAMENTO' ORDER BY t.criado_em LIMIT 1 OFFSET 1
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+CALL sp_decidir_encerramento(@tk1, @gestor1, TRUE, 'Serviço conferido com o cliente, aprovado.')
+--------------
+
++--------------------------------------+-----------+-------------------------+--------------+-------------------+
+| id                                   | status    | encerrado_em            | situacao_sla | pct_sla_consumido |
++--------------------------------------+-----------+-------------------------+--------------+-------------------+
+| 39d3809e-3352-4a70-b7ad-e1df637d9e12 | ENCERRADO | 2026-11-22 17:05:40.717 | VIOLADO      |            1660.9 |
++--------------------------------------+-----------+-------------------------+--------------+-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CALL sp_decidir_encerramento(@tk2, @gestor2, FALSE, 'Falta o relatório de testes finais.')
+--------------
+
++--------------------------------------+------------+--------------+--------------+-------------------+
+| id                                   | status     | encerrado_em | situacao_sla | pct_sla_consumido |
++--------------------------------------+------------+--------------+--------------+-------------------+
+| ab1ef0af-f280-493f-b900-2f9a1ff1c23f | EM_REVISAO | NULL         | VENCIDO      |             384.9 |
++--------------------------------------+------------+--------------+--------------+-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT LEFT(h.evento, 22) AS evento, LEFT(h.descricao, 60) AS descricao, u.nome AS autor
+  FROM historico_ticket h LEFT JOIN usuarios u ON u.id = h.usuario_id
+ WHERE h.ticket_id IN (@tk1, @tk2) AND h.criado_em >= NOW() - INTERVAL 1 MINUTE
+--------------
+
++-----------------------+--------------------------------------------------------------+------------------------+
+| evento                | descricao                                                    | autor                  |
++-----------------------+--------------------------------------------------------------+------------------------+
+| STATUS_ALTERADO       | Status alterado de SOLICITACAO_ENCERRAMENTO para ENCERRADO.  | NULL                   |
+| ENCERRAMENTO_APROVADO | Serviço conferido com o cliente, aprovado.                   | Lucas Cardoso Monteiro |
+| STATUS_ALTERADO       | Status alterado de SOLICITACAO_ENCERRAMENTO para EM_REVISAO. | NULL                   |
+| ENCERRAMENTO_NEGADO   | Falta o relatório de testes finais.                          | Samuel Campos Castro   |
++-----------------------+--------------------------------------------------------------+------------------------+
+4 rows in set (0.00 sec)
+
+--------------
+CALL sp_decidir_encerramento(@tk1, @gestor1, TRUE, 'Aprovando de novo.')
+--------------
+
+ERROR 1644 (45000) at line 12: O ticket não está aguardando decisão de encerramento.

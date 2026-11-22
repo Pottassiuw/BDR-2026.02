@@ -1,0 +1,24 @@
+--------------
+SELECT c.equipe, c.tecnicos_ativos, u.nome AS tecnico_sugerido,
+       (SELECT COUNT(*) FROM tickets t
+         WHERE t.responsavel_id = u.id AND t.status <> 'ENCERRADO') AS abertos_do_sugerido
+  FROM vw_carga_equipes c
+  LEFT JOIN usuarios u ON u.id = fn_sugerir_tecnico(c.equipe_id)
+ ORDER BY c.tickets_abertos DESC LIMIT 10
+--------------
+
++-------------------------+-----------------+---------------------------+---------------------+
+| equipe                  | tecnicos_ativos | tecnico_sugerido          | abertos_do_sugerido |
++-------------------------+-----------------+---------------------------+---------------------+
+| Instalação Santos       |               2 | Débora Duarte Nascimento  |                   1 |
+| Instalação Taubaté      |               2 | Matheus Souza Almeida     |                   2 |
+| Instalação São Paulo    |               2 | Beatriz Rocha Souza       |                   2 |
+| CFTV Taubaté            |               3 | Larissa Pereira Silva     |                   0 |
+| Drones Taubaté          |               3 | Yasmin Martins Monteiro   |                   0 |
+| Elétrica Santos         |               3 | William Moreira Araújo    |                   0 |
+| Telemetria São Paulo    |               3 | Caio Rocha Costa          |                   0 |
+| Campo Campinas          |               3 | Tatiane Gomes Teixeira    |                   0 |
+| CFTV São Paulo          |               3 | Mariana Castro Monteiro   |                   0 |
+| Manutenção Santos       |               3 | Carla Martins Souza       |                   0 |
++-------------------------+-----------------+---------------------------+---------------------+
+10 rows in set (0.01 sec)

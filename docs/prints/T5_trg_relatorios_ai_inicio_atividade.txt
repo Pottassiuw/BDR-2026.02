@@ -1,0 +1,65 @@
+--------------
+SELECT t.id, u.id INTO @tk, @tec
+  FROM tickets t
+  JOIN ticket_equipes te ON te.ticket_id = t.id
+  JOIN usuarios u ON u.equipe_id = te.equipe_id AND u.cargo = 'TECNICO' AND u.ativo
+ WHERE t.status = 'NAO_INICIADO' ORDER BY t.criado_em, u.nome LIMIT 1
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+SELECT status FROM tickets WHERE id = @tk
+--------------
+
++--------------+
+| status       |
++--------------+
+| NAO_INICIADO |
++--------------+
+1 row in set (0.00 sec)
+
+--------------
+INSERT INTO relatorios (trabalho_realizado, materiais_utilizados, outros_detalhes, ticket_id, autor_id)
+VALUES ('Diagnóstico inicial: fonte do equipamento queimada, substituída.', '1 fonte 12V 5A',
+        'Retorno amanhã para teste final.', @tk, @tec)
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+
+--------------
+SELECT status FROM tickets WHERE id = @tk
+--------------
+
++--------------+
+| status       |
++--------------+
+| EM_ANDAMENTO |
++--------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT evento, LEFT(descricao, 70) AS descricao FROM historico_ticket
+ WHERE ticket_id = @tk AND criado_em >= NOW() - INTERVAL 1 MINUTE AND evento <> 'ALERTA_SLA'
+ ORDER BY criado_em, evento
+--------------
+
++--------------------+--------------------------------------------------------------------------+
+| evento             | descricao                                                                |
++--------------------+--------------------------------------------------------------------------+
+| ATIVIDADE_INICIADA | Início registrado automaticamente pelo primeiro relatório da equipe.     |
+| LOG                | Relatório registrado: Diagnóstico inicial: fonte do equipamento queima   |
+| STATUS_ALTERADO    | Status alterado de NAO_INICIADO para EM_ANDAMENTO.                       |
++--------------------+--------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+--------------
+SELECT tipo, descricao FROM atividades_conta WHERE usuario_id = @tec ORDER BY criado_em DESC LIMIT 1
+--------------
+
++------+--------------------------------------------------------------------------------------------------+
+| tipo | descricao                                                                                        |
++------+--------------------------------------------------------------------------------------------------+
+| LOG  | Registrou relatório no ticket Instalação de estação de drones - Torre de telecom Unidade 8.      |
++------+--------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)

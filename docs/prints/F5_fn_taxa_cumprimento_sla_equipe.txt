@@ -1,0 +1,25 @@
+--------------
+SELECT equipe,
+       fn_taxa_cumprimento_sla_equipe(equipe_id, '2026-07-01', '2026-09-30') AS pct_sla_3T,
+       fn_taxa_cumprimento_sla_equipe(equipe_id, '2026-10-01', '2026-11-30') AS pct_sla_out_nov
+  FROM vw_carga_equipes
+ ORDER BY pct_sla_out_nov DESC, equipe LIMIT 12
+--------------
+
++-------------------------+------------+-----------------+
+| equipe                  | pct_sla_3T | pct_sla_out_nov |
++-------------------------+------------+-----------------+
+| Automação SJC           |     100.00 |          100.00 |
+| CFTV Santos             |     100.00 |          100.00 |
+| CFTV SJC                |      75.00 |          100.00 |
+| Drones Santos           |      40.00 |          100.00 |
+| Elétrica Campinas       |       NULL |          100.00 |
+| Elétrica SJC            |     100.00 |          100.00 |
+| Elétrica Taubaté        |      50.00 |          100.00 |
+| Instalação São Paulo    |      80.00 |          100.00 |
+| Manutenção Campinas     |       0.00 |          100.00 |
+| Manutenção Santos       |     100.00 |          100.00 |
+| Manutenção São Paulo    |     100.00 |          100.00 |
+| Redes Campinas          |       NULL |          100.00 |
++-------------------------+------------+-----------------+
+12 rows in set (0.02 sec)

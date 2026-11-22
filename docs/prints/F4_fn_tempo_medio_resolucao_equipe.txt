@@ -1,0 +1,23 @@
+--------------
+SELECT equipe, tickets_encerrados,
+       fn_tempo_medio_resolucao_equipe(equipe_id) AS horas_medias_resolucao
+  FROM vw_carga_equipes
+ WHERE tickets_encerrados > 0
+ ORDER BY horas_medias_resolucao LIMIT 10
+--------------
+
++---------------------+--------------------+------------------------+
+| equipe              | tickets_encerrados | horas_medias_resolucao |
++---------------------+--------------------+------------------------+
+| Redes Campinas      |                  2 |                   4.10 |
+| Telemetria Santos   |                  2 |                   7.05 |
+| CFTV Santos         |                  4 |                   7.40 |
+| Elétrica SJC        |                  4 |                   8.11 |
+| Elétrica Campinas   |                  3 |                  11.89 |
+| Redes São Paulo     |                  2 |                  14.88 |
+| Campo São Paulo     |                  2 |                  15.18 |
+| Automação Santos    |                  8 |                  15.19 |
+| Drones SJC          |                  6 |                  16.20 |
+| Telemetria Taubaté  |                  2 |                  18.09 |
++---------------------+--------------------+------------------------+
+10 rows in set (0.00 sec)

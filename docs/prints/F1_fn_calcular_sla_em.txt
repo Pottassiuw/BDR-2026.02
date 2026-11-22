@@ -1,0 +1,21 @@
+--------------
+SELECT codigo AS prioridade, sla_horas,
+       fn_calcular_sla_em(codigo, '2026-11-23 08:00:00') AS sla_para_abertura_23_11_08h
+  FROM prioridades ORDER BY peso
+--------------
+
++------------+-----------+-----------------------------+
+| prioridade | sla_horas | sla_para_abertura_23_11_08h |
++------------+-----------+-----------------------------+
+| BAIXA      |        72 | 2026-11-26 08:00:00.000     |
+| MEDIA      |        48 | 2026-11-25 08:00:00.000     |
+| ALTA       |        24 | 2026-11-24 08:00:00.000     |
+| CRITICA    |         8 | 2026-11-23 16:00:00.000     |
++------------+-----------+-----------------------------+
+4 rows in set (0.01 sec)
+
+--------------
+SELECT fn_calcular_sla_em('URGENTE', NOW())
+--------------
+
+ERROR 1644 (45000) at line 6: Prioridade inválida: não há SLA cadastrado.

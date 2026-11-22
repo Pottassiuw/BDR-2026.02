@@ -1,0 +1,42 @@
+--------------
+SET @tk = (SELECT id FROM tickets WHERE status = 'EM_ANDAMENTO' ORDER BY criado_em DESC LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @eq = (SELECT p.equipe_id FROM tickets t JOIN projetos p ON p.id = t.projeto_id WHERE t.id = @tk)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+UPDATE tickets
+   SET responsavel_id = fn_sugerir_tecnico(@eq),
+       sla_em = sla_em + INTERVAL 24 HOUR
+ WHERE id = @tk
+--------------
+
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+UPDATE tickets SET status = 'SOLICITACAO_ENCERRAMENTO' WHERE id = @tk
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+SELECT evento, descricao FROM historico_ticket
+ WHERE ticket_id = @tk AND usuario_id IS NULL ORDER BY criado_em, evento
+--------------
+
++----------------------+-------------------------------------------------------------------+
+| evento               | descricao                                                         |
++----------------------+-------------------------------------------------------------------+
+| RESPONSAVEL_ALTERADO | Responsável alterado de (ninguém) para William Ferreira Castro.   |
+| SLA_ALTERADO         | Prazo do SLA alterado de 23/11/2026 01:05 para 24/11/2026 01:05.  |
+| STATUS_ALTERADO      | Status alterado de EM_ANDAMENTO para SOLICITACAO_ENCERRAMENTO.    |
++----------------------+-------------------------------------------------------------------+
+3 rows in set (0.00 sec)

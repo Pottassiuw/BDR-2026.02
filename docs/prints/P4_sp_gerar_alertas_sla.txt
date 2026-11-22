@@ -1,0 +1,50 @@
+--------------
+CALL sp_gerar_alertas_sla()
+--------------
+
++----------------------------------+-----------------------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------+
+| email                            | gestor                      | qtd_tickets | vencidos | mensagens                                                                                                             |
++----------------------------------+-----------------------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------+
+| gabriela.silva@altave.com.br     | Gabriela Moreira Silva      |           3 |        3 | [VENCIDO] "Leitor de crachá sem resposta - Rede Wi-" - vencido há 16.7 h | [VENCIDO] "Queda de link de rádio -        |
+| tatiane.lima@altave.com.br       | Tatiane Gomes Lima          |           3 |        3 | [VENCIDO] "Ruído no sinal da antena - Painel solar " - vencido há 496.1 h | [VENCIDO] "Instalação de gateway d        |
+| mariana.costa@altave.com.br      | Mariana Rocha Costa         |           3 |        2 | [VENCIDO] "Instalação de estação de drones - Automa" - vencido há 134.5 h | [VENCIDO] "Cabo rompido na torre -        |
+| william.martins@altave.com.br    | William Cardoso Martins     |           2 |        2 | [VENCIDO] "Instalação de estação de drones - Monito" - vencido há 2608.4 h | [VENCIDO] "Falha na gravação do N        |
+| vanessa.santos@altave.com.br     | Vanessa Teixeira Santos     |           2 |        2 | [VENCIDO] "Instalação de gateway de telemetria - In" - vencido há 43.8 h | [VENCIDO] "Instalação de novos pont        |
+| igor.rodrigues@altave.com.br     | Igor Almeida Rodrigues      |           2 |        2 | [VENCIDO] "Firmware desatualizado - Torre de teleco" - vencido há 180.9 h | [VENCIDO] "Montagem da torre princ        |
+| leonardo.barbosa@altave.com.br   | Leonardo Souza Barbosa      |           2 |        2 | [VENCIDO] "Cabo rompido na torre - Rede Wi-Fi indus" - vencido há 0.5 h | [VENCIDO] "Montagem da torre princip        |
+| samuel.castro@altave.com.br      | Samuel Campos Castro        |           2 |        2 | [VENCIDO] "Firmware desatualizado - Rede de sensore" - vencido há 236.2 h | [VENCIDO] "Instalação de rede de f        |
+| felipe.costa@altave.com.br       | Felipe Carvalho Costa       |           2 |        1 | [VENCIDO] "Leitor de crachá sem resposta - Telemetr" - vencido há 2023.3 h | [EM_ALERTA] "Disjuntor desarmando        |
+| samuel.martins@altave.com.br     | Samuel Rodrigues Martins    |           2 |        1 | [VENCIDO] "Instalação de gateway de telemetria - In" - vencido há 10.4 h | [EM_ALERTA] "Instalação de quadro e        |
+| matheus.moura@altave.com.br      | Matheus Moreira Moura       |           1 |        1 | [VENCIDO] "Disjuntor desarmando - Telemetria de tan" - vencido há 48.0 h                                              |
+| vanessa.teixeira@altave.com.br   | Vanessa Pereira Teixeira    |           1 |        1 | [VENCIDO] "Instalação de estação de drones - Torre " - vencido há 73.0 h                                              |
+| thiago.mendes@altave.com.br      | Thiago Cardoso Mendes       |           1 |        1 | [VENCIDO] "Instalação de estação de drones - Contro" - vencido há 1845.8 h                                            |
+| rafael.teixeira@altave.com.br    | Rafael Campos Teixeira      |           1 |        1 | [VENCIDO] "Câmera sem imagem - Rede de sensores Ter" - vencido há 52.9 h                                              |
+| ana.souza.ferreira@altave.com.br | Ana Souza Ferreira          |           1 |        1 | [VENCIDO] "CLP reiniciando sozinho - Controle de ac" - vencido há 86.7 h                                              |
+| gabriela.vieira@altave.com.br    | Gabriela Freitas Vieira     |           1 |        1 | [VENCIDO] "Câmera sem imagem - Automação de linha P" - vencido há 47.7 h                                              |
+| bruno.pereira@altave.com.br      | Bruno Silva Pereira         |           1 |        1 | [VENCIDO] "Queda de link de rádio - Torre de teleco" - vencido há 618.3 h                                             |
+| andre.barbosa@altave.com.br      | André Nascimento Barbosa    |           1 |        1 | [VENCIDO] "Nobreak em alarme - Telemetria de tanque" - vencido há 1452.6 h                                            |
+| renata.gomes@altave.com.br       | Renata Vieira Gomes         |           1 |        0 | [EM_ALERTA] "Nobreak em alarme - Inspeção com drones " - vence em 0.5 h                                               |
+| fernanda.rodrigues@altave.com.br | Fernanda Ferreira Rodrigues |           1 |        0 | [EM_ALERTA] "Instalação de estação de drones - Automa" - vence em 4.5 h                                               |
++----------------------------------+-----------------------------+-------------+----------+-----------------------------------------------------------------------------------------------------------------------+
+20 rows in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+SELECT COUNT(*) AS eventos_alerta_gravados FROM historico_ticket WHERE evento = 'ALERTA_SLA'
+--------------
+
++-------------------------+
+| eventos_alerta_gravados |
++-------------------------+
+|                      33 |
++-------------------------+
+1 row in set (0.00 sec)
+
+--------------
+CALL sp_gerar_alertas_sla()
+--------------
+
+Empty set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)

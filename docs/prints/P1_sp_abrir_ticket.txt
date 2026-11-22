@@ -1,0 +1,71 @@
+--------------
+SET @projeto = (SELECT p.id FROM projetos p JOIN clientes c ON c.id = p.cliente_id
+                 WHERE p.ativo AND c.ativo ORDER BY p.nome, p.id LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @suporte = (SELECT id FROM usuarios WHERE cargo = 'SUPORTE' AND ativo ORDER BY nome LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.01 sec)
+
+--------------
+CALL sp_abrir_ticket(@projeto, @suporte, 'Câmera da portaria sem imagem',
+     'Câmera 03 da portaria principal sem imagem desde as 7h.', 'MANUTENCAO', 'ALTA', NULL, @novo)
+--------------
+
++--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+| ticket_id                            | titulo                         | prioridade | status       | sla_em                  | equipe_projeto     | responsavel             | situacao_sla |
++--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+| 176a2db8-e6b0-11f1-93ba-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:05:40.665 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
++--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT @novo AS ticket_criado
+--------------
+
++--------------------------------------+
+| ticket_criado                        |
++--------------------------------------+
+| 176a2db8-e6b0-11f1-93ba-b42e99ea4f74 |
++--------------------------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT evento, descricao FROM historico_ticket WHERE ticket_id = @novo
+--------------
+
++---------------+----------------------------------------------------------------+
+| evento        | descricao                                                      |
++---------------+----------------------------------------------------------------+
+| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:05.  |
++---------------+----------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT e.nome AS equipe_alocada FROM ticket_equipes te JOIN equipes e ON e.id = te.equipe_id WHERE te.ticket_id = @novo
+--------------
+
++--------------------+
+| equipe_alocada     |
++--------------------+
+| Automação Santos   |
++--------------------+
+1 row in set (0.00 sec)
+
+--------------
+SET @tecnico = (SELECT id FROM usuarios WHERE cargo = 'TECNICO' AND ativo ORDER BY nome LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CALL sp_abrir_ticket(@projeto, @tecnico, 'Teste de permissão', 'x', 'MANUTENCAO', 'BAIXA', NULL, @x)
+--------------
+
+ERROR 1644 (45000) at line 12: O cargo do usuário não permite abrir tickets.

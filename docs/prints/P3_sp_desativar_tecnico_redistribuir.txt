@@ -1,0 +1,61 @@
+--------------
+SET @tec = (SELECT responsavel_id FROM tickets WHERE status <> 'ENCERRADO' AND responsavel_id IS NOT NULL
+             GROUP BY responsavel_id ORDER BY COUNT(*) DESC, responsavel_id LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @admin = (SELECT id FROM usuarios WHERE cargo = 'SUPORTE_INTERNO' ORDER BY criado_em LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT nome, ativo, (SELECT COUNT(*) FROM tickets WHERE responsavel_id = @tec AND status <> 'ENCERRADO') AS abertos
+  FROM usuarios WHERE id = @tec
+--------------
+
++-----------------------+-------+---------+
+| nome                  | ativo | abertos |
++-----------------------+-------+---------+
+| Karina Duarte Araújo  |     1 |       3 |
++-----------------------+-------+---------+
+1 row in set (0.00 sec)
+
+--------------
+CALL sp_desativar_tecnico_redistribuir(@tec, @admin)
+--------------
+
++--------------------------------------+---------------------------------------------------------------------------+------------+---------------------------+
+| ticket_id                            | titulo                                                                    | prioridade | novo_responsavel          |
++--------------------------------------+---------------------------------------------------------------------------+------------+---------------------------+
+| 1a043f37-42a2-48f6-8975-47df4207eca2 | Instalação de novos pontos de câmera - Subestação elétrica Planta 8       | CRITICA    | Débora Duarte Nascimento  |
+| 04b55e64-f875-4228-bb13-dae7ba897699 | Instalação de gateway de telemetria - Inspeção com drones Terminal 6      | BAIXA      | Débora Duarte Nascimento  |
+| 31ed46fc-b81b-45cb-9f4a-9bf46b42d598 | Switch com portas desligadas - Telemetria de tanques Pátio 1              | BAIXA      | Débora Duarte Nascimento  |
++--------------------------------------+---------------------------------------------------------------------------+------------+---------------------------+
+3 rows in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT nome, ativo FROM usuarios WHERE id = @tec
+--------------
+
++-----------------------+-------+
+| nome                  | ativo |
++-----------------------+-------+
+| Karina Duarte Araújo  |     0 |
++-----------------------+-------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT tipo, descricao FROM atividades_conta WHERE usuario_id = @tec ORDER BY criado_em DESC LIMIT 1
+--------------
+
++-------+-------------------+
+| tipo  | descricao         |
++-------+-------------------+
+| CONTA | Conta desativada. |
++-------+-------------------+
+1 row in set (0.00 sec)

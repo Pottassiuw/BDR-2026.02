@@ -1,0 +1,52 @@
+--------------
+SET @projeto = (SELECT p.id FROM projetos p JOIN clientes c ON c.id = p.cliente_id
+                 WHERE p.ativo AND c.ativo ORDER BY p.nome DESC LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @com = (SELECT id FROM usuarios WHERE cargo = 'COMERCIAL' AND ativo ORDER BY nome LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+INSERT INTO tickets (id, titulo, descricao, categoria, prioridade, sla_em, projeto_id, aberto_por_id)
+VALUES ('00000000-0000-4000-8000-000000000001', 'Queda total do link da torre', 'Sem comunicação com a torre 2.',
+        'MANUTENCAO', 'CRITICA', NULL, @projeto, @com)
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+SELECT titulo, prioridade, status, criado_em, sla_em,
+       TIMESTAMPDIFF(HOUR, criado_em, sla_em) AS horas_sla
+  FROM tickets WHERE id = '00000000-0000-4000-8000-000000000001'
+--------------
+
++------------------------------+------------+--------------+-------------------------+-------------------------+-----------+
+| titulo                       | prioridade | status       | criado_em               | sla_em                  | horas_sla |
++------------------------------+------------+--------------+-------------------------+-------------------------+-----------+
+| Queda total do link da torre | CRITICA    | EM_ANDAMENTO | 2026-11-22 17:05:40.983 | 2026-11-23 01:05:40.983 |         8 |
++------------------------------+------------+--------------+-------------------------+-------------------------+-----------+
+1 row in set (0.00 sec)
+
+--------------
+SET @inativo = (SELECT id FROM projetos WHERE ativo = FALSE LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+INSERT INTO tickets (titulo, descricao, categoria, sla_em, projeto_id, aberto_por_id)
+VALUES ('Ticket em projeto inativo', 'teste', 'MANUTENCAO', NULL, @inativo, @com)
+--------------
+
+ERROR 1644 (45000) at line 13: Não é possível abrir ticket: projeto ou cliente inativo/inexistente.
+--------------
+INSERT INTO tickets (titulo, descricao, categoria, status, sla_em, projeto_id, aberto_por_id)
+VALUES ('Ticket já encerrado', 'teste', 'MANUTENCAO', 'ENCERRADO', NULL, @projeto, @com)
+--------------
+
+ERROR 1644 (45000) at line 15: Um ticket não pode ser criado já encerrado.

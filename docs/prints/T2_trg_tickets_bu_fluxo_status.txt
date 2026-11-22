@@ -1,0 +1,45 @@
+--------------
+SET @enc = (SELECT id FROM tickets WHERE status = 'ENCERRADO' ORDER BY criado_em LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @ni  = (SELECT id FROM tickets WHERE status = 'NAO_INICIADO' ORDER BY criado_em LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SET @sol = (SELECT id FROM tickets WHERE status = 'SOLICITACAO_ENCERRAMENTO' ORDER BY criado_em LIMIT 1)
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+UPDATE tickets SET prioridade = 'CRITICA' WHERE id = @enc
+--------------
+
+ERROR 1644 (45000) at line 6: Ticket encerrado não pode ser alterado.
+--------------
+UPDATE tickets SET status = 'ENCERRADO' WHERE id = @ni
+--------------
+
+ERROR 1644 (45000) at line 7: Transição de status não permitida.
+--------------
+UPDATE tickets SET status = 'ENCERRADO' WHERE id = @sol
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--------------
+SELECT status, encerrado_em, fn_situacao_sla(id) AS situacao_sla FROM tickets WHERE id = @sol
+--------------
+
++-----------+-------------------------+--------------+
+| status    | encerrado_em            | situacao_sla |
++-----------+-------------------------+--------------+
+| ENCERRADO | 2026-11-22 17:05:41.018 | VIOLADO      |
++-----------+-------------------------+--------------+
+1 row in set (0.00 sec)
