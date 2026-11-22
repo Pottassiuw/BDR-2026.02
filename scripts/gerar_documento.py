@@ -134,6 +134,8 @@ def resumo(dic, letra):
     return "\n".join(linhas)
 
 
+PARTE5 = (RAIZ / "docs" / "parte5.md").read_text(encoding="utf-8").rstrip("\n")
+
 doc = f"""# 3ª Avaliação de Banco de Dados Relacional — Sistema de Tickets (Projeto API)
 
 **FATEC São José dos Campos · BDR · 2º semestre de 2026** · Entrega: 23/11/2026
@@ -159,7 +161,7 @@ doc = f"""# 3ª Avaliação de Banco de Dados Relacional — Sistema de Tickets 
 | 3 | 6 triggers | [`sql/06_triggers.sql`](../sql/06_triggers.sql) |
 | 3 | Execuções de exemplo (prints) | [`sql/07_exemplos.sql`](../sql/07_exemplos.sql), [`docs/prints/`](prints/) |
 | 4 | **Dicionário de dados** | [`docs/dicionario-de-dados.md`](dicionario-de-dados.md) |
-| 5 | Conexão com a API | a definir |
+| 5 | Conexão com a API (sp_abrir_ticket + fn_situacao_sla) | [`docs/parte5.md`](parte5.md), [`scripts/demo_parte5.sh`](../scripts/demo_parte5.sh), [`docs/prints/parte5/`](prints/parte5/) |
 
 ### Como executar
 
@@ -286,12 +288,7 @@ com descrição, tipo, nulidade, default, PK/FK/UNIQUE e as regras CHECK, além 
 
 ---
 
-## Parte 5 — Conexão do projeto API ao banco
-
-**A definir.** O schema `bdr_api` mantém os nomes e tipos usados pelo Prisma da API, então a API pode
-apontar `DATABASE_URL` para este banco. As rotinas previstas para a integração são `fn_situacao_sla`
-(function) e `sp_abrir_ticket` / `sp_decidir_encerramento` (procedures), chamadas via
-`prisma.$queryRaw` / `$executeRaw`.
+{PARTE5}
 """
 
 (RAIZ / "docs" / "documento.md").write_text(doc, encoding="utf-8")

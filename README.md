@@ -21,10 +21,11 @@ Documento final referencia os scripts e o dicionário → `docs/`
 | `docs/documento.md` | **Documento da entrega** (partes 1–5, problema + código + retorno de cada rotina) |
 | `docs/dicionario-de-dados.md` | Dicionário de dados (arquivo separado) |
 | `docs/prints/` | Retorno de cada function/procedure/trigger (`.txt` e `.png`) |
+| `docs/parte5.md`, `docs/prints/parte5/` | Parte 5 (fonte da seção no documento) e evidências da API ligada ao `bdr_api` |
 | `modelos/` | Modelo conceitual e lógico (`.png` + `.md` com Mermaid e passo a passo para o brModelo) |
 | `sql/01_ddl.sql` … `06_triggers.sql` | Scripts, na ordem de execução |
 | `sql/07_exemplos.sql` | Chamadas de exemplo usadas nos prints |
-| `scripts/` | Geradores (DML, prints, diagramas, dicionário, documento) e `rodar_tudo.sh` |
+| `scripts/` | Geradores (DML, prints, diagramas, dicionário, documento), `rodar_tudo.sh` e `demo_parte5.sh` (demonstração da API) |
 
 ## Como rodar (MySQL 8)
 
