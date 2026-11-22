@@ -19,7 +19,7 @@ CALL sp_abrir_ticket(@projeto, @suporte, 'Câmera da portaria sem imagem',
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
 | ticket_id                            | titulo                         | prioridade | status       | sla_em                  | equipe_projeto     | responsavel             | situacao_sla |
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
-| e4b041eb-e6b0-11f1-93ba-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:11:25.058 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
+| d336a8e2-e6b1-11f1-a91b-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:18:05.236 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
 1 row in set (0.00 sec)
 
@@ -32,7 +32,7 @@ SELECT @novo AS ticket_criado
 +--------------------------------------+
 | ticket_criado                        |
 +--------------------------------------+
-| e4b041eb-e6b0-11f1-93ba-b42e99ea4f74 |
+| d336a8e2-e6b1-11f1-a91b-b42e99ea4f74 |
 +--------------------------------------+
 1 row in set (0.00 sec)
 
@@ -43,7 +43,7 @@ SELECT evento, descricao FROM historico_ticket WHERE ticket_id = @novo
 +---------------+----------------------------------------------------------------+
 | evento        | descricao                                                      |
 +---------------+----------------------------------------------------------------+
-| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:11.  |
+| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:18.  |
 +---------------+----------------------------------------------------------------+
 1 row in set (0.00 sec)
 
@@ -59,6 +59,27 @@ SELECT e.nome AS equipe_alocada FROM ticket_equipes te JOIN equipes e ON e.id = 
 1 row in set (0.00 sec)
 
 --------------
+CALL sp_abrir_ticket(@projeto, @suporte, 'Leitor de crachá travado',
+     'Leitor de crachá da catraca 2 não libera a passagem.', 'MANUTENCAO', 'ALTA',
+     NOW(3) + INTERVAL 3 HOUR, @novo2)
+--------------
+
++--------------------------------------+---------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+| ticket_id                            | titulo                    | prioridade | status       | sla_em                  | equipe_projeto     | responsavel             | situacao_sla |
++--------------------------------------+---------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+| d3373ace-e6b1-11f1-a91b-b42e99ea4f74 | Leitor de crachá travado  | ALTA       | EM_ANDAMENTO | 2026-11-22 20:18:05.240 | Automação Santos   | Paula Ferreira Oliveira | EM_ALERTA    |
++--------------------------------------+---------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CALL sp_abrir_ticket(@projeto, @suporte, 'Teste de prazo inválido', 'x', 'MANUTENCAO', 'BAIXA',
+     NOW(3) - INTERVAL 1 HOUR, @x)
+--------------
+
+ERROR 1644 (45000) at line 14: O prazo do SLA precisa ser uma data futura.
+--------------
 SET @tecnico = (SELECT id FROM usuarios WHERE cargo = 'TECNICO' AND ativo ORDER BY nome LIMIT 1)
 --------------
 
@@ -68,4 +89,4 @@ Query OK, 0 rows affected (0.00 sec)
 CALL sp_abrir_ticket(@projeto, @tecnico, 'Teste de permissão', 'x', 'MANUTENCAO', 'BAIXA', NULL, @x)
 --------------
 
-ERROR 1644 (45000) at line 12: O cargo do usuário não permite abrir tickets.
+ERROR 1644 (45000) at line 17: O cargo do usuário não permite abrir tickets.

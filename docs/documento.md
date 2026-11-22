@@ -694,7 +694,7 @@ SELECT c.equipe, c.tecnicos_ativos, u.nome AS tecnico_sugerido,
 
 ### P1. sp_abrir_ticket(...) — *pensada para a API (Parte 5)*
 
-**Problema.** Abrir um ticket envolve várias gravações que precisam ser atômicas (US 1 e 8): o ticket, a alocação da equipe do projeto, o histórico e a atividade da conta. A procedure valida as regras de negócio (usuário ativo e com cargo que pode abrir ticket, projeto e cliente ativos, categoria/prioridade válidas), calcula o SLA pela prioridade quando não é informado (fn_calcular_sla_em), sugere o técnico responsável (fn_sugerir_tecnico) e grava tudo numa transação. Devolve o id no parâmetro OUT e o ticket criado (vw_tickets_detalhados).
+**Problema.** Abrir um ticket envolve várias gravações que precisam ser atômicas (US 1 e 8): o ticket, a alocação da equipe do projeto, o histórico e a atividade da conta. A procedure valida as regras de negócio (usuário ativo e com cargo que pode abrir ticket, projeto e cliente ativos, categoria/prioridade válidas), calcula o SLA pela prioridade quando não é informado (fn_calcular_sla_em) - a API envia a data-limite escolhida no formulário (slaEm) -, sugere o técnico responsável (fn_sugerir_tecnico) e grava tudo numa transação. Devolve o id no parâmetro OUT e o ticket criado (vw_tickets_detalhados).
 
 **Código SQL** (`sql/05_procedures.sql`):
 
@@ -706,7 +706,7 @@ CREATE PROCEDURE sp_abrir_ticket(
   IN  p_descricao    TEXT,
   IN  p_categoria    VARCHAR(20),
   IN  p_prioridade   VARCHAR(10),
-  IN  p_sla_horas    SMALLINT,      -- NULL = SLA padrão da prioridade
+  IN  p_sla_em       DATETIME(3),   -- prazo escolhido na tela; NULL = SLA padrão da prioridade
   OUT p_ticket_id    CHAR(36))
 BEGIN
   DECLARE v_pode_abrir BOOLEAN;
@@ -753,9 +753,10 @@ BEGIN
   END IF;
 
   SET p_prioridade = COALESCE(p_prioridade, 'MEDIA');
-  SET v_sla = IF(p_sla_horas IS NULL,
-                 fn_calcular_sla_em(p_prioridade, v_agora),
-                 DATE_ADD(v_agora, INTERVAL p_sla_horas HOUR));
+  SET v_sla = COALESCE(p_sla_em, fn_calcular_sla_em(p_prioridade, v_agora));
+  IF v_sla <= v_agora THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O prazo do SLA precisa ser uma data futura.';
+  END IF;
 
   START TRANSACTION;
     SET p_ticket_id = UUID();
@@ -799,6 +800,13 @@ CALL sp_abrir_ticket(@projeto, @suporte, 'Câmera da portaria sem imagem',
 SELECT @novo AS ticket_criado;
 SELECT evento, descricao FROM historico_ticket WHERE ticket_id = @novo;
 SELECT e.nome AS equipe_alocada FROM ticket_equipes te JOIN equipes e ON e.id = te.equipe_id WHERE te.ticket_id = @novo;
+-- prazo escolhido na tela (como a API envia o slaEm): 3 h para um ticket ALTA
+CALL sp_abrir_ticket(@projeto, @suporte, 'Leitor de crachá travado',
+     'Leitor de crachá da catraca 2 não libera a passagem.', 'MANUTENCAO', 'ALTA',
+     NOW(3) + INTERVAL 3 HOUR, @novo2);
+-- erro esperado: prazo no passado
+CALL sp_abrir_ticket(@projeto, @suporte, 'Teste de prazo inválido', 'x', 'MANUTENCAO', 'BAIXA',
+     NOW(3) - INTERVAL 1 HOUR, @x);
 -- erro esperado: técnico não pode abrir ticket
 SET @tecnico = (SELECT id FROM usuarios WHERE cargo = 'TECNICO' AND ativo ORDER BY nome LIMIT 1);
 CALL sp_abrir_ticket(@projeto, @tecnico, 'Teste de permissão', 'x', 'MANUTENCAO', 'BAIXA', NULL, @x);
@@ -832,7 +840,7 @@ CALL sp_abrir_ticket(@projeto, @suporte, 'Câmera da portaria sem imagem',
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
 | ticket_id                            | titulo                         | prioridade | status       | sla_em                  | equipe_projeto     | responsavel             | situacao_sla |
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
-| e4b041eb-e6b0-11f1-93ba-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:11:25.058 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
+| d336a8e2-e6b1-11f1-a91b-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:18:05.236 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
 1 row in set (0.00 sec)
 
@@ -845,7 +853,7 @@ SELECT @novo AS ticket_criado
 +--------------------------------------+
 | ticket_criado                        |
 +--------------------------------------+
-| e4b041eb-e6b0-11f1-93ba-b42e99ea4f74 |
+| d336a8e2-e6b1-11f1-a91b-b42e99ea4f74 |
 +--------------------------------------+
 1 row in set (0.00 sec)
 
@@ -856,7 +864,7 @@ SELECT evento, descricao FROM historico_ticket WHERE ticket_id = @novo
 +---------------+----------------------------------------------------------------+
 | evento        | descricao                                                      |
 +---------------+----------------------------------------------------------------+
-| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:11.  |
+| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:18.  |
 +---------------+----------------------------------------------------------------+
 1 row in set (0.00 sec)
 
@@ -872,6 +880,27 @@ SELECT e.nome AS equipe_alocada FROM ticket_equipes te JOIN equipes e ON e.id = 
 1 row in set (0.00 sec)
 
 --------------
+CALL sp_abrir_ticket(@projeto, @suporte, 'Leitor de crachá travado',
+     'Leitor de crachá da catraca 2 não libera a passagem.', 'MANUTENCAO', 'ALTA',
+     NOW(3) + INTERVAL 3 HOUR, @novo2)
+--------------
+
++--------------------------------------+---------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+| ticket_id                            | titulo                    | prioridade | status       | sla_em                  | equipe_projeto     | responsavel             | situacao_sla |
++--------------------------------------+---------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+| d3373ace-e6b1-11f1-a91b-b42e99ea4f74 | Leitor de crachá travado  | ALTA       | EM_ANDAMENTO | 2026-11-22 20:18:05.240 | Automação Santos   | Paula Ferreira Oliveira | EM_ALERTA    |
++--------------------------------------+---------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CALL sp_abrir_ticket(@projeto, @suporte, 'Teste de prazo inválido', 'x', 'MANUTENCAO', 'BAIXA',
+     NOW(3) - INTERVAL 1 HOUR, @x)
+--------------
+
+ERROR 1644 (45000) at line 14: O prazo do SLA precisa ser uma data futura.
+--------------
 SET @tecnico = (SELECT id FROM usuarios WHERE cargo = 'TECNICO' AND ativo ORDER BY nome LIMIT 1)
 --------------
 
@@ -881,7 +910,7 @@ Query OK, 0 rows affected (0.00 sec)
 CALL sp_abrir_ticket(@projeto, @tecnico, 'Teste de permissão', 'x', 'MANUTENCAO', 'BAIXA', NULL, @x)
 --------------
 
-ERROR 1644 (45000) at line 12: O cargo do usuário não permite abrir tickets.
+ERROR 1644 (45000) at line 17: O cargo do usuário não permite abrir tickets.
 ```
 </details>
 

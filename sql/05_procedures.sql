@@ -20,7 +20,8 @@ DELIMITER $$
 -- histórico e a atividade da conta. A procedure valida as regras de
 -- negócio (usuário ativo e com cargo que pode abrir ticket, projeto e
 -- cliente ativos, categoria/prioridade válidas), calcula o SLA pela
--- prioridade quando não é informado (fn_calcular_sla_em), sugere o
+-- prioridade quando não é informado (fn_calcular_sla_em) - a API envia
+-- a data-limite escolhida no formulário (slaEm) -, sugere o
 -- técnico responsável (fn_sugerir_tecnico) e grava tudo numa transação.
 -- Devolve o id no parâmetro OUT e o ticket criado (vw_tickets_detalhados).
 -- ---------------------------------------------------------------------
@@ -31,7 +32,7 @@ CREATE PROCEDURE sp_abrir_ticket(
   IN  p_descricao    TEXT,
   IN  p_categoria    VARCHAR(20),
   IN  p_prioridade   VARCHAR(10),
-  IN  p_sla_horas    SMALLINT,      -- NULL = SLA padrão da prioridade
+  IN  p_sla_em       DATETIME(3),   -- prazo escolhido na tela; NULL = SLA padrão da prioridade
   OUT p_ticket_id    CHAR(36))
 BEGIN
   DECLARE v_pode_abrir BOOLEAN;
@@ -78,9 +79,10 @@ BEGIN
   END IF;
 
   SET p_prioridade = COALESCE(p_prioridade, 'MEDIA');
-  SET v_sla = IF(p_sla_horas IS NULL,
-                 fn_calcular_sla_em(p_prioridade, v_agora),
-                 DATE_ADD(v_agora, INTERVAL p_sla_horas HOUR));
+  SET v_sla = COALESCE(p_sla_em, fn_calcular_sla_em(p_prioridade, v_agora));
+  IF v_sla <= v_agora THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O prazo do SLA precisa ser uma data futura.';
+  END IF;
 
   START TRANSACTION;
     SET p_ticket_id = UUID();

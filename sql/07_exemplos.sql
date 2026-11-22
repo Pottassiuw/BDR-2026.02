@@ -62,6 +62,13 @@ CALL sp_abrir_ticket(@projeto, @suporte, 'Câmera da portaria sem imagem',
 SELECT @novo AS ticket_criado;
 SELECT evento, descricao FROM historico_ticket WHERE ticket_id = @novo;
 SELECT e.nome AS equipe_alocada FROM ticket_equipes te JOIN equipes e ON e.id = te.equipe_id WHERE te.ticket_id = @novo;
+-- prazo escolhido na tela (como a API envia o slaEm): 3 h para um ticket ALTA
+CALL sp_abrir_ticket(@projeto, @suporte, 'Leitor de crachá travado',
+     'Leitor de crachá da catraca 2 não libera a passagem.', 'MANUTENCAO', 'ALTA',
+     NOW(3) + INTERVAL 3 HOUR, @novo2);
+-- erro esperado: prazo no passado
+CALL sp_abrir_ticket(@projeto, @suporte, 'Teste de prazo inválido', 'x', 'MANUTENCAO', 'BAIXA',
+     NOW(3) - INTERVAL 1 HOUR, @x);
 -- erro esperado: técnico não pode abrir ticket
 SET @tecnico = (SELECT id FROM usuarios WHERE cargo = 'TECNICO' AND ativo ORDER BY nome LIMIT 1);
 CALL sp_abrir_ticket(@projeto, @tecnico, 'Teste de permissão', 'x', 'MANUTENCAO', 'BAIXA', NULL, @x);
