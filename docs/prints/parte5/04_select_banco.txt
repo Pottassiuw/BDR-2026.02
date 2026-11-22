@@ -1,0 +1,76 @@
+--------------
+SET time_zone = '+00:00'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SELECT id, titulo, prioridade, status, criado_em, sla_em, fn_situacao_sla(id) AS situacao_sla
+  FROM tickets WHERE id = '0c3095e2-e6b2-11f1-a91b-b42e99ea4f74'
+--------------
+
++--------------------------------------+------------------------------+------------+--------------+-------------------------+-------------------------+--------------+
+| id                                   | titulo                       | prioridade | status       | criado_em               | sla_em                  | situacao_sla |
++--------------------------------------+------------------------------+------------+--------------+-------------------------+-------------------------+--------------+
+| 0c3095e2-e6b2-11f1-a91b-b42e99ea4f74 | Câmera da doca 2 sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-22 20:19:40.826 | 2026-11-22 23:19:39.000 | EM_ALERTA    |
++--------------------------------------+------------------------------+------------+--------------+-------------------------+-------------------------+--------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT titulo, equipe_projeto, responsavel, aberto_por FROM vw_tickets_detalhados WHERE ticket_id = '0c3095e2-e6b2-11f1-a91b-b42e99ea4f74'
+--------------
+
++------------------------------+--------------------+-------------------------+-----------------------+
+| titulo                       | equipe_projeto     | responsavel             | aberto_por            |
++------------------------------+--------------------+-------------------------+-----------------------+
+| Câmera da doca 2 sem imagem  | Automação Santos   | Matheus Moreira Barbosa | Carla Araújo Ribeiro  |
++------------------------------+--------------------+-------------------------+-----------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT e.nome AS equipe_alocada FROM ticket_equipes te JOIN equipes e ON e.id = te.equipe_id
+ WHERE te.ticket_id = '0c3095e2-e6b2-11f1-a91b-b42e99ea4f74' ORDER BY e.nome
+--------------
+
++----------------------+
+| equipe_alocada       |
++----------------------+
+| Automação Campinas   |
+| Automação Santos     |
++----------------------+
+2 rows in set (0.00 sec)
+
+--------------
+SELECT evento, descricao FROM historico_ticket WHERE ticket_id = '0c3095e2-e6b2-11f1-a91b-b42e99ea4f74'
+--------------
+
++---------------+----------------------------------------------------------------+
+| evento        | descricao                                                      |
++---------------+----------------------------------------------------------------+
+| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 22/11/2026 23:19.  |
++---------------+----------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT tipo, descricao FROM atividades_conta WHERE usuario_id = '749d804c-27f6-41ec-ab08-b214a7e56d4e' ORDER BY criado_em DESC LIMIT 1
+--------------
+
++-------------------+-------------------------------------------------------------------------------------------------------------------+
+| tipo              | descricao                                                                                                         |
++-------------------+-------------------------------------------------------------------------------------------------------------------+
+| TICKET | ABERTURA | Abriu o ticket Câmera da doca 2 sem imagem vinculado ao projeto Automação de linha Centro de Distribuição 4.      |
++-------------------+-------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+--------------
+SELECT COUNT(*) AS tickets_do_tecnico FROM tickets WHERE aberto_por_id = '4f7b7371-1ce1-4457-be86-0d8c0df6fdef'
+--------------
+
++--------------------+
+| tickets_do_tecnico |
++--------------------+
+|                  0 |
++--------------------+
+1 row in set (0.00 sec)
+
+Bye

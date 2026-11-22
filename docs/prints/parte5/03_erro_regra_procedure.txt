@@ -1,0 +1,5 @@
+### 5) Regra validada pela procedure — TÉCNICO da equipe do projeto tenta abrir ticket
+{"id":"4f7b7371-1ce1-4457-be86-0d8c0df6fdef","nome":"Helena Duarte Rodrigues","cargo":"TECNICO"}
+HTTP 200
+{"erro":"O cargo do usuário não permite abrir tickets."}
+HTTP 422

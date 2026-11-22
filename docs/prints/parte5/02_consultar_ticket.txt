@@ -1,0 +1,13 @@
+### 3) Consultar o ticket — GET http://127.0.0.1:3055/api/tickets/0c3095e2-e6b2-11f1-a91b-b42e99ea4f74   (API -> SELECT fn_situacao_sla(id))
+{"id":"0c3095e2-e6b2-11f1-a91b-b42e99ea4f74","title":"Câmera da doca 2 sem imagem","type":"Manutenção","openedAt":"22/11","timeRemaining":"cerca de 3 horas","createdBy":"Carla Araújo Ribeiro","createdById":"749d804c-27f6-41ec-ab08-b214a7e56d4e","teams":[{"id":"649b3809-0780-48cf-9503-42650f66fa84","nome":"Automação Campinas"},{"id":"9b26be74-c863-48a3-829b-6def559c11d4","nome":"Automação Santos"}],"status":"Em andamento","priority":"Alta","description":"Câmera da doca 2 sem imagem desde as 14h.","recentLogs":[{"title":"TICKET_CRIADO","sentBy":"Carla Araújo Ribeiro","sentAt":"2026-11-22T20:19:40.826Z"}],"projectId":"6bb49078-133e-4f4e-b54e-95370eb37919","situacaoSla":"EM_ALERTA"}
+HTTP 200
+
+### 4) Listagem — GET http://127.0.0.1:3055/api/tickets   (situacaoSla em cada item; resumo)
+total de tickets: 221
+por situacaoSla: {'EM_ALERTA': 10, 'NO_PRAZO': 33, 'CUMPRIDO': 111, 'VENCIDO': 30, 'VIOLADO': 37}
+5 primeiros (mais recentes):
+   0c3095e2-e6b2-11f1-a91b-b42e99ea4f74 | Câmera da doca 2 sem imagem              | Em andamento     | EM_ALERTA
+   d3dc56bb-3a90-4cbe-8223-dcc39a72382f | Instalação de novos pontos de câmera - A | Em andamento     | NO_PRAZO
+   c787948d-31e5-4180-8c43-861b19e20055 | Instalação inicial do sistema - Painel s | Não iniciado     | NO_PRAZO
+   cd2e7829-a07a-4c49-9e89-cce21aa2ee40 | Falha na gravação do NVR - Telemetria de | Em andamento     | NO_PRAZO
+   4d346de1-619c-4d34-a73b-85f488b83476 | Switch com portas desligadas - Telemetri | Em andamento     | NO_PRAZO
