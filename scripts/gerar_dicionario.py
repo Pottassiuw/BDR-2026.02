@@ -188,13 +188,15 @@ for t, (desc, cols_desc) in TABELAS.items():
         d = default.replace("_utf8mb4\\'", "'").replace("\\'", "'")
         if extra.upper().startswith("DEFAULT_GENERATED") and d not in ("∅",):
             d = d if "(" in d else d
-        tipo_md = tipo.replace("|", "\\|")
-        out.append(f"| `{c}` | {cols_desc.get(c, '')} | {tipo_md} | {'Sim' if nulo == 'YES' else 'Não'} | "
+        tipo_md = tipo.replace("|", "\\|").replace("','", "', '")
+        out.append(f"| `{c}` | {cols_desc.get(c, '').replace('|', chr(92) + '|')} | {tipo_md} | {'Sim' if nulo == 'YES' else 'Não'} | "
                    f"{'' if d == '∅' else '`' + d + '`'} | {', '.join(chave)} | {'; '.join(restr)} |")
     if cks:
         out += ["", "**Regras CHECK:**", ""]
         for nome, clausula in cks:
-            out.append(f"- `{nome}`: `{clausula.replace('|', '¦')}`")
+            c = (clausula.replace("_utf8mb4\\\\'", "'").replace("\\\\'", "'").replace("`", "")
+                 .replace(",'", ", '"))
+            out.append(f"- `{nome}`: `{c}`")
     out.append("")
 
 out += ["## Objetos programados", "",

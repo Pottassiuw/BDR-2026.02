@@ -37,3 +37,10 @@ mysql -uroot -p --force -t < sql/07_exemplos.sql                        # opcion
 Para regenerar os artefatos (requer Python 3 + Pillow), com o banco recém-criado:
 `python3 scripts/gerar_dml.py > sql/02_dml.sql`, `MYSQL=... python3 scripts/gerar_dicionario.py`,
 `MYSQL=... python3 scripts/gerar_prints.py`, `python3 scripts/gerar_diagramas.py`, `python3 scripts/gerar_documento.py`.
+
+## Arquivos para o Teams (`docs/entrega/`)
+
+`Documento-BDR-3a-avaliacao.pdf/.docx` (documento completo, com capa, sumário, modelos e todos os prints) e
+`Dicionario-de-Dados.pdf/.docx` (dicionário em arquivo separado). Gerados por `scripts/gerar_entrega.py`
+(pandoc ≥ 3 + python-docx + weasyprint): `PANDOC=/caminho/pandoc python3 scripts/gerar_entrega.py`.
+No .docx, o sumário é um campo do Word: ao abrir, confirme "atualizar campos" (ou F9) para preencher as páginas.

@@ -25,7 +25,7 @@ Domínio dos cargos (perfis de acesso) dos usuários e suas permissões. Registr
 
 | Campo | Descrição | Tipo | Nulo | Default | Chave | Restrições |
 |---|---|---|---|---|---|---|
-| `codigo` | Código do cargo (mesmo ENUM `Cargo` da API). | enum('TECNICO','GESTOR','SUPORTE','SUPORTE_INTERNO','COMERCIAL') | Não |  | PK | NN |
+| `codigo` | Código do cargo (mesmo ENUM `Cargo` da API). | enum('TECNICO', 'GESTOR', 'SUPORTE', 'SUPORTE_INTERNO', 'COMERCIAL') | Não |  | PK | NN |
 | `nome` | Nome do cargo para exibição. | varchar(60) | Não |  | UQ | NN; `uq_cargos_nome` |
 | `descricao` | O que o cargo faz no sistema. | varchar(255) | Não |  |  | NN |
 | `pode_abrir_ticket` | Indica se o cargo pode abrir tickets. | tinyint(1) | Não | `0` |  | NN |
@@ -37,7 +37,7 @@ Domínio das prioridades de ticket, com o SLA padrão de cada uma. Registros na 
 
 | Campo | Descrição | Tipo | Nulo | Default | Chave | Restrições |
 |---|---|---|---|---|---|---|
-| `codigo` | Código da prioridade (mesmo ENUM `Prioridade` da API). | enum('BAIXA','MEDIA','ALTA','CRITICA') | Não |  | PK | NN |
+| `codigo` | Código da prioridade (mesmo ENUM `Prioridade` da API). | enum('BAIXA', 'MEDIA', 'ALTA', 'CRITICA') | Não |  | PK | NN |
 | `nome` | Nome para exibição. | varchar(30) | Não |  |  | NN |
 | `peso` | Peso para ordenar a fila (maior = mais urgente). | tinyint unsigned | Não |  | UQ | NN; `uq_prioridades_peso`; CK `ck_prioridades_peso` |
 | `sla_horas` | Prazo padrão do SLA, em horas, a partir da abertura. | smallint unsigned | Não |  |  | NN; CK `ck_prioridades_sla`; CK `ck_prioridades_alerta` |
@@ -45,9 +45,9 @@ Domínio das prioridades de ticket, com o SLA padrão de cada uma. Registros na 
 
 **Regras CHECK:**
 
-- `ck_prioridades_peso`: `(`peso` between 1 and 10)`
-- `ck_prioridades_sla`: `(`sla_horas` between 1 and 720)`
-- `ck_prioridades_alerta`: `(`alerta_horas` < `sla_horas`)`
+- `ck_prioridades_peso`: `(peso between 1 and 10)`
+- `ck_prioridades_sla`: `(sla_horas between 1 and 720)`
+- `ck_prioridades_alerta`: `(alerta_horas < sla_horas)`
 
 ## status_ticket
 
@@ -55,7 +55,7 @@ Domínio dos status do ciclo de vida do ticket. Registros na carga (02_dml.sql):
 
 | Campo | Descrição | Tipo | Nulo | Default | Chave | Restrições |
 |---|---|---|---|---|---|---|
-| `codigo` | Código do status (mesmo ENUM `StatusTicket` da API). | enum('NAO_INICIADO','EM_ANDAMENTO','SOLICITACAO_ENCERRAMENTO','ENCERRADO','EM_REVISAO') | Não |  | PK | NN |
+| `codigo` | Código do status (mesmo ENUM `StatusTicket` da API). | enum('NAO_INICIADO', 'EM_ANDAMENTO', 'SOLICITACAO_ENCERRAMENTO', 'ENCERRADO', 'EM_REVISAO') | Não |  | PK | NN |
 | `nome` | Nome para exibição. | varchar(40) | Não |  |  | NN |
 | `descricao` | Significado do status. | varchar(255) | Não |  |  | NN |
 | `finalizado` | Indica status final (ticket encerrado). | tinyint(1) | Não | `0` |  | NN |
@@ -76,7 +76,7 @@ Equipes técnicas que atendem projetos e tickets. Registros na carga (02_dml.sql
 
 **Regras CHECK:**
 
-- `ck_equipes_nome`: `(char_length(trim(`nome`)) >= 3)`
+- `ck_equipes_nome`: `(char_length(trim(nome)) >= 3)`
 
 ## usuarios
 
@@ -88,7 +88,7 @@ Contas dos funcionários (técnicos, gestores, analistas). Registros na carga (0
 | `nome` | Nome completo. | varchar(120) | Não |  |  | NN |
 | `email` | E-mail de login (único). | varchar(254) | Não |  | UQ | NN; `uq_usuarios_email`; CK `ck_usuarios_email` |
 | `senha_hash` | Hash bcrypt da senha. | varchar(255) | Não |  |  | NN |
-| `cargo` | Cargo/perfil de acesso. | enum('TECNICO','GESTOR','SUPORTE','SUPORTE_INTERNO','COMERCIAL') | Não |  | FK → `cargos.codigo` | NN; ON DELETE RESTRICT |
+| `cargo` | Cargo/perfil de acesso. | enum('TECNICO', 'GESTOR', 'SUPORTE', 'SUPORTE_INTERNO', 'COMERCIAL') | Não |  | FK → `cargos.codigo` | NN; ON DELETE RESTRICT |
 | `ativo` | Conta ativa (pode logar) ou desativada. | tinyint(1) | Não | `1` |  | NN |
 | `senha_provisoria` | TRUE enquanto o usuário não trocar a senha provisória. | tinyint(1) | Não | `1` |  | NN |
 | `criado_em` | Data/hora de criação. | datetime(3) | Não | `CURRENT_TIMESTAMP(3)` |  | NN |
@@ -98,7 +98,7 @@ Contas dos funcionários (técnicos, gestores, analistas). Registros na carga (0
 
 **Regras CHECK:**
 
-- `ck_usuarios_email`: `(`email` like _utf8mb4\\'_%@_%._%\\')`
+- `ck_usuarios_email`: `(email like '_%@_%._%')`
 
 ## clientes
 
@@ -138,9 +138,9 @@ Tickets / ordens de serviço de instalação ou manutenção. Registros na carga
 | `id` | Identificador (UUID). | char(36) | Não | `uuid()` | PK | NN |
 | `titulo` | Título curto do chamado. | varchar(180) | Não |  |  | NN; CK `ck_tickets_titulo` |
 | `descricao` | Descrição detalhada do problema/serviço. | text | Não |  |  | NN |
-| `categoria` | MANUTENCAO ou INSTALACAO. | enum('MANUTENCAO','INSTALACAO') | Não |  |  | NN |
-| `prioridade` | Prioridade do ticket. | enum('BAIXA','MEDIA','ALTA','CRITICA') | Não | `MEDIA` | FK → `prioridades.codigo` | NN; ON DELETE RESTRICT |
-| `status` | Status atual no fluxo. | enum('NAO_INICIADO','EM_ANDAMENTO','SOLICITACAO_ENCERRAMENTO','ENCERRADO','EM_REVISAO') | Não | `EM_ANDAMENTO` | FK → `status_ticket.codigo` | NN; ON DELETE RESTRICT; CK `ck_tickets_encerramento` |
+| `categoria` | MANUTENCAO ou INSTALACAO. | enum('MANUTENCAO', 'INSTALACAO') | Não |  |  | NN |
+| `prioridade` | Prioridade do ticket. | enum('BAIXA', 'MEDIA', 'ALTA', 'CRITICA') | Não | `MEDIA` | FK → `prioridades.codigo` | NN; ON DELETE RESTRICT |
+| `status` | Status atual no fluxo. | enum('NAO_INICIADO', 'EM_ANDAMENTO', 'SOLICITACAO_ENCERRAMENTO', 'ENCERRADO', 'EM_REVISAO') | Não | `EM_ANDAMENTO` | FK → `status_ticket.codigo` | NN; ON DELETE RESTRICT; CK `ck_tickets_encerramento` |
 | `sla_em` | Data-limite do SLA. | datetime(3) | Não |  |  | NN; CK `ck_tickets_sla` |
 | `encerrado_em` | Data/hora do encerramento (só quando ENCERRADO). | datetime(3) | Sim |  |  | CK `ck_tickets_encerramento` |
 | `criado_em` | Data/hora de abertura. | datetime(3) | Não | `CURRENT_TIMESTAMP(3)` |  | NN; CK `ck_tickets_sla`; CK `ck_tickets_encerramento` |
@@ -151,9 +151,9 @@ Tickets / ordens de serviço de instalação ou manutenção. Registros na carga
 
 **Regras CHECK:**
 
-- `ck_tickets_titulo`: `(char_length(trim(`titulo`)) >= 5)`
-- `ck_tickets_sla`: `(`sla_em` > `criado_em`)`
-- `ck_tickets_encerramento`: `(((`status` = _utf8mb4\\'ENCERRADO\\') and (`encerrado_em` is not null) and (`encerrado_em` >= `criado_em`)) or ((`status` <> _utf8mb4\\'ENCERRADO\\') and (`encerrado_em` is null)))`
+- `ck_tickets_titulo`: `(char_length(trim(titulo)) >= 5)`
+- `ck_tickets_sla`: `(sla_em > criado_em)`
+- `ck_tickets_encerramento`: `(((status = 'ENCERRADO') and (encerrado_em is not null) and (encerrado_em >= criado_em)) or ((status <> 'ENCERRADO') and (encerrado_em is null)))`
 
 ## ticket_equipes
 
@@ -183,7 +183,7 @@ Relatórios de atendimento registrados pelos técnicos. Registros na carga (02_d
 
 **Regras CHECK:**
 
-- `ck_relatorios_trabalho`: `(char_length(trim(`trabalho_realizado`)) >= 10)`
+- `ck_relatorios_trabalho`: `(char_length(trim(trabalho_realizado)) >= 10)`
 
 ## historico_ticket
 
@@ -202,7 +202,7 @@ Linha do tempo (log) de eventos de cada ticket. Registros na carga (02_dml.sql):
 
 **Regras CHECK:**
 
-- `ck_historico_evento`: `((`evento` = upper(`evento`)) and (char_length(`evento`) >= 3))`
+- `ck_historico_evento`: `((evento = upper(evento)) and (char_length(evento) >= 3))`
 
 ## atividades_conta
 
@@ -211,14 +211,14 @@ Auditoria das ações feitas por/sobre cada conta de usuário. Registros na carg
 | Campo | Descrição | Tipo | Nulo | Default | Chave | Restrições |
 |---|---|---|---|---|---|---|
 | `id` | Identificador (UUID). | char(36) | Não | `uuid()` | PK | NN |
-| `tipo` | Categoria da atividade (CADASTRO, EQUIPE, LOG, PROJETO, TICKET, TICKET | ABERTURA, CONTA). | varchar(20) | Não |  |  | NN; CK `ck_atividades_tipo` |
+| `tipo` | Categoria da atividade (CADASTRO, EQUIPE, LOG, PROJETO, TICKET, TICKET \| ABERTURA, CONTA). | varchar(20) | Não |  |  | NN; CK `ck_atividades_tipo` |
 | `descricao` | Descrição da atividade. | text | Não |  |  | NN |
 | `criado_em` | Data/hora da atividade. | datetime(3) | Não | `CURRENT_TIMESTAMP(3)` |  | NN |
 | `usuario_id` | Usuário da atividade. | char(36) | Não |  | FK → `usuarios.id` | NN; ON DELETE CASCADE |
 
 **Regras CHECK:**
 
-- `ck_atividades_tipo`: `(`tipo` in (_utf8mb4\\'CADASTRO\\',_utf8mb4\\'EQUIPE\\',_utf8mb4\\'LOG\\',_utf8mb4\\'PROJETO\\',_utf8mb4\\'TICKET\\',_utf8mb4\\'TICKET ¦ ABERTURA\\',_utf8mb4\\'CONTA\\'))`
+- `ck_atividades_tipo`: `(tipo in ('CADASTRO', 'EQUIPE', 'LOG', 'PROJETO', 'TICKET', 'TICKET | ABERTURA', 'CONTA'))`
 
 ## Objetos programados
 

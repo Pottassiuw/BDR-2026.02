@@ -219,9 +219,9 @@ precisa ser posterior à abertura) e DEFAULTs (UUID, datas automáticas, status/
 | `clientes` | | 50 |
 | `projetos` | | 60 |
 | `tickets` | | 220 |
-| `ticket_equipes` | associativa N:N | 326 |
-| `relatorios` | | 413 |
-| `historico_ticket` | | 1461 |
+| `ticket_equipes` | associativa N:N | 304 |
+| `relatorios` | | 426 |
+| `historico_ticket` | | 1374 |
 | `atividades_conta` | | 702 |
 
 ## Parte 3 — Inserção das linhas (DML)
@@ -230,7 +230,7 @@ Script: [`sql/02_dml.sql`](../sql/02_dml.sql) — um `INSERT INTO` por linha, de
 Os dados são fictícios e foram gerados por [`scripts/gerar_dml.py`](../scripts/gerar_dml.py) com semente
 fixa, então o arquivo é sempre o mesmo. Os dados respeitam as FKs e as regras do negócio: cada equipe tem
 1 gestor e 3 técnicos; projetos ligados a clientes, equipes e ao gestor da equipe; tickets com status
-coerente com a idade (antigos encerrados, recentes em andamento); SLA pela prioridade; cerca de 22 %
+coerente com a idade (antigos encerrados, recentes em andamento); SLA pela prioridade; cerca de 25 %
 dos encerramentos fora do SLA; histórico em ordem cronológica (abertura → início por equipe → relatórios
 → solicitação → aprovação/negação). Apenas as tabelas de domínio têm menos de 50 registros, como o
 enunciado permite.
