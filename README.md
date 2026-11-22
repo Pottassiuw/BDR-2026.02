@@ -22,7 +22,7 @@ Documento final referencia os scripts e o dicionário → `docs/`
 | `docs/dicionario-de-dados.md` | Dicionário de dados (arquivo separado) |
 | `docs/prints/` | Retorno de cada function/procedure/trigger (`.txt` e `.png`) |
 | `docs/parte5.md`, `docs/prints/parte5/` | Parte 5 (fonte da seção no documento) e evidências da API ligada ao `bdr_api` |
-| `modelos/` | Modelo conceitual e lógico (`.png` + `.md` com Mermaid e passo a passo para o brModelo) |
+| `modelos/` | Modelo conceitual e lógico: arquivos do brModelo (`.brM3` e `.xml`), imagens `.png` exportadas pelo brModelo e `.md` |
 | `sql/01_ddl.sql` … `06_triggers.sql` | Scripts, na ordem de execução |
 | `sql/07_exemplos.sql` | Chamadas de exemplo usadas nos prints |
 | `scripts/` | Geradores (DML, prints, diagramas, dicionário, documento), `rodar_tudo.sh` e `demo_parte5.sh` (demonstração da API) |
@@ -37,6 +37,8 @@ mysql -uroot -p --force -t < sql/07_exemplos.sql                        # opcion
 Para regenerar os artefatos (requer Python 3 + Pillow), com o banco recém-criado:
 `python3 scripts/gerar_dml.py > sql/02_dml.sql`, `MYSQL=... python3 scripts/gerar_dicionario.py`,
 `MYSQL=... python3 scripts/gerar_prints.py`, `python3 scripts/gerar_diagramas.py`, `python3 scripts/gerar_documento.py`.
+Arquivos do brModelo (Node): `node scripts/brmodelo_logico.js modelos` (gera o conceitual e o lógico).
+Os PNG em `modelos/` são os exportados pelo brModelo; `gerar_diagramas.py` os sobrescreveria com a versão antiga.
 
 ## Arquivos para o Teams (`docs/entrega/`)
 

@@ -5,6 +5,12 @@
 Mapeamento do modelo conceitual para tabelas relacionais. Implementado em `sql/01_ddl.sql`;
 detalhes de cada campo em `docs/dicionario-de-dados.md`.
 
+**Arquivo do brModelo:** `modelos/modelo-logico.brM3` (também em XML, `modelos/modelo-logico.xml`; abrir no brModelo 3
+em *Arquivo → Abrir*). A imagem `modelos/modelo-logico.png` foi exportada pelo brModelo. Tem as 12 tabelas com tipos, PK, FK, UNIQUE e as constraints nomeadas como no DDL (inclusive
+`ON UPDATE`/`ON DELETE`) espelhando `sql/01_ddl.sql`; os valores dos ENUM ficam no campo *Dicionário* de cada coluna.
+Cardinalidades nas linhas: junto à tabela da PK `(1,1)` (ou `(0,1)` se a FK aceita NULL) e `(0,n)` junto à tabela da FK.
+O autorrelacionamento `usuarios.criado_por_id` é só a constraint FK (sem linha). Gerado por `scripts/brmodelo_logico.js`.
+
 ## Esquema relacional (notação textual)
 
 Sublinhado = PK, `#` = FK.

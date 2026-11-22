@@ -2,7 +2,7 @@
 
 ![Modelo conceitual](modelo-conceitual.png)
 
-Diagrama em notação de Peter Chen (a mesma do brModelo), gerado por `scripts/gerar_diagramas.py`.
+Diagrama exportado do brModelo 3 (`modelo-conceitual.brM3`).
 A fonte de verdade das entidades é o schema real da API (`API-2026.02/src/prisma/schema.prisma`).
 
 ## Entidades
@@ -70,17 +70,23 @@ erDiagram
     EQUIPE |o--o{ HISTORICO_TICKET : inicia_atividade
 ```
 
-## Como redesenhar no brModelo (arquivo .brM3)
+## Arquivo do brModelo
 
-O arquivo `.brM3` não foi gerado automaticamente (formato do brModelo não documentado). Para entregar o
-modelo no brModelo 3:
+Arquivo nativo do **brModelo 3**: `modelos/modelo-conceitual.brM3` (também em XML, `modelos/modelo-conceitual.xml`).
+O XML é gerado por `scripts/brmodelo_conceitual.js`; o `.brM3` e a imagem do topo foram salvos pelo próprio brModelo 3.3
+ao abrir esse XML (carga sem erros).
 
-1. *Arquivo → Novo → Modelo Conceitual*.
-2. Crie as 11 entidades da tabela "Entidades" (ferramenta **Entidade**). Em cada uma, adicione os atributos
-   (ferramenta **Atributo**) e marque o identificador (`id` ou `codigo`) como **Atributo identificador**.
-3. Crie cada relacionamento da tabela "Relacionamentos" (ferramenta **Relacionamento**), ligue às duas
-   entidades e ajuste a cardinalidade de cada lado clicando na linha (ex.: `(0,n)` / `(1,1)`).
-   - `cria` é um **autorrelacionamento**: ligue USUARIO duas vezes ao mesmo losango.
-   - `alocada` é N:N com o atributo `criado_em` no próprio relacionamento.
-4. Posicione como no PNG acima e salve em `modelos/modelo-conceitual.brM3`.
-5. (Opcional) *Esquema → Converter para modelo lógico* e compare com `modelo-logico.md`.
+1. No brModelo: *Arquivo → Abrir* e escolha `modelo-conceitual.brM3` (ou o `.xml`).
+2. Para a imagem do documento: *Arquivo → Exportar* (PNG) — já exportada em `modelo-conceitual.png`.
+3. (Opcional) *Esquema → Converter para modelo lógico* e compare com `modelo-logico.xml`.
+
+Convenções usadas no arquivo:
+- Identificadores (`id`/`codigo`) com bolinha preenchida; atributos opcionais (NULL) tracejados.
+- Cardinalidade escrita **junto à entidade** (notação do brModelo): ex. em `possui`, `(1,1)` ao lado de CARGO
+  = cada usuário tem exatamente um cargo; `(0,n)` ao lado de USUARIO = um cargo tem vários usuários.
+- `cria` é autorrelacionamento de USUARIO com os papéis `criador` (0,1) e `criado` (0,n).
+- `alocada` é N:N (TICKET–EQUIPE) com o atributo `criado_em` no próprio relacionamento.
+- As linhas são "inteligentes": o brModelo recalcula o traçado ao abrir. Se alguma ficar cruzando,
+  basta arrastar a entidade/losango.
+
+Para regerar: `node scripts/brmodelo_conceitual.js modelos`.
