@@ -36,7 +36,7 @@ SELECT evento, descricao FROM historico_ticket
 | evento               | descricao                                                         |
 +----------------------+-------------------------------------------------------------------+
 | RESPONSAVEL_ALTERADO | Responsável alterado de (ninguém) para William Ferreira Castro.   |
-| SLA_ALTERADO         | Prazo do SLA alterado de 23/11/2026 01:09 para 24/11/2026 01:09.  |
+| SLA_ALTERADO         | Prazo do SLA alterado de 23/11/2026 01:11 para 24/11/2026 01:11.  |
 | STATUS_ALTERADO      | Status alterado de EM_ANDAMENTO para SOLICITACAO_ENCERRAMENTO.    |
 +----------------------+-------------------------------------------------------------------+
 3 rows in set (0.00 sec)

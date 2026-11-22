@@ -3,7 +3,7 @@ SET @eq = (SELECT u.equipe_id FROM relatorios r JOIN usuarios u ON u.id = r.auto
             WHERE u.equipe_id IS NOT NULL GROUP BY u.equipe_id ORDER BY COUNT(*) DESC LIMIT 1)
 --------------
 
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.00 sec)
 
 --------------
 CALL sp_ranking_tecnicos(@eq, 60)
@@ -16,9 +16,9 @@ CALL sp_ranking_tecnicos(@eq, 60)
 |       2 | Ana Rocha Campos       | Drones São Paulo  |                  5 |                 4 |                   0 |          6.3 | NAO         |
 |       3 | Igor Costa Pereira     | Drones São Paulo  |                  4 |                 4 |                   1 |          6.3 | NAO         |
 +---------+------------------------+-------------------+--------------------+-------------------+---------------------+--------------+-------------+
-3 rows in set (0.00 sec)
+3 rows in set (0.01 sec)
 
-Query OK, 0 rows affected (0.00 sec)
+Query OK, 0 rows affected (0.01 sec)
 
 --------------
 CALL sp_ranking_tecnicos(@eq, 7)
@@ -31,6 +31,6 @@ CALL sp_ranking_tecnicos(@eq, 7)
 |       2 | Igor Costa Pereira     | Drones São Paulo  |                  2 |                 2 |                   1 |          2.0 | SIM         |
 |       3 | Vanessa Santos Moreira | Drones São Paulo  |                  1 |                 1 |                   1 |          2.0 | NAO         |
 +---------+------------------------+-------------------+--------------------+-------------------+---------------------+--------------+-------------+
-3 rows in set (0.01 sec)
+3 rows in set (0.00 sec)
 
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.00 sec)

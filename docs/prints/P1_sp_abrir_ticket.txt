@@ -19,7 +19,7 @@ CALL sp_abrir_ticket(@projeto, @suporte, 'Câmera da portaria sem imagem',
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
 | ticket_id                            | titulo                         | prioridade | status       | sla_em                  | equipe_projeto     | responsavel             | situacao_sla |
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
-| 9c1bd0c4-e6b0-11f1-93ba-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:09:23.289 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
+| e4b041eb-e6b0-11f1-93ba-b42e99ea4f74 | Câmera da portaria sem imagem  | ALTA       | EM_ANDAMENTO | 2026-11-23 17:11:25.058 | Automação Santos   | Matheus Moreira Barbosa | NO_PRAZO     |
 +--------------------------------------+--------------------------------+------------+--------------+-------------------------+--------------------+-------------------------+--------------+
 1 row in set (0.00 sec)
 
@@ -32,7 +32,7 @@ SELECT @novo AS ticket_criado
 +--------------------------------------+
 | ticket_criado                        |
 +--------------------------------------+
-| 9c1bd0c4-e6b0-11f1-93ba-b42e99ea4f74 |
+| e4b041eb-e6b0-11f1-93ba-b42e99ea4f74 |
 +--------------------------------------+
 1 row in set (0.00 sec)
 
@@ -43,7 +43,7 @@ SELECT evento, descricao FROM historico_ticket WHERE ticket_id = @novo
 +---------------+----------------------------------------------------------------+
 | evento        | descricao                                                      |
 +---------------+----------------------------------------------------------------+
-| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:09.  |
+| TICKET_CRIADO | Ticket aberto com prioridade ALTA e SLA até 23/11/2026 17:11.  |
 +---------------+----------------------------------------------------------------+
 1 row in set (0.00 sec)
 

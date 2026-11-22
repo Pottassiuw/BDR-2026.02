@@ -29,16 +29,16 @@ CALL sp_relatorio_sla_equipes('2026-10-01', '2026-11-30')
 | Drones SJC              |         6 |          3 |       3 |            66.67 |                  16.20 | ABAIXO DA MEDIA  |
 | Torres Campinas         |         4 |          3 |       1 |            66.67 |                  29.36 | ABAIXO DA MEDIA  |
 | Drones São Paulo        |        11 |          8 |       3 |            50.00 |                  47.03 | ABAIXO DA MEDIA  |
-| Manutenção Campinas     |         4 |          2 |       2 |            50.00 |                 153.08 | ABAIXO DA MEDIA  |
+| Manutenção Campinas     |         4 |          2 |       2 |            50.00 |                 153.09 | ABAIXO DA MEDIA  |
 | Automação Taubaté       |         4 |          2 |       2 |            50.00 |                  41.33 | ABAIXO DA MEDIA  |
 | Redes Santos            |         4 |          2 |       2 |            50.00 |                  51.70 | ABAIXO DA MEDIA  |
 | Campo Taubaté           |         2 |          2 |       0 |            50.00 |                  50.18 | ABAIXO DA MEDIA  |
 | Drones Campinas         |         2 |          2 |       0 |            50.00 |                  54.28 | ABAIXO DA MEDIA  |
 | Instalação Campinas     |         8 |          7 |       1 |            42.86 |                  44.55 | ABAIXO DA MEDIA  |
-| Drones Taubaté          |         6 |          3 |       3 |            33.33 |                 178.43 | ABAIXO DA MEDIA  |
+| Drones Taubaté          |         6 |          3 |       3 |            33.33 |                 178.44 | ABAIXO DA MEDIA  |
 | CFTV São Paulo          |         5 |          3 |       2 |            33.33 |                  42.12 | ABAIXO DA MEDIA  |
 | Elétrica São Paulo      |         4 |          3 |       1 |            33.33 |                  80.00 | ABAIXO DA MEDIA  |
-| Instalação Taubaté      |         5 |          1 |       4 |             0.00 |                 209.46 | ABAIXO DA MEDIA  |
+| Instalação Taubaté      |         5 |          1 |       4 |             0.00 |                 209.48 | ABAIXO DA MEDIA  |
 | Telemetria São Paulo    |         5 |          1 |       4 |             0.00 |                 106.30 | ABAIXO DA MEDIA  |
 | Automação Campinas      |         3 |          1 |       2 |             0.00 |                  41.75 | ABAIXO DA MEDIA  |
 | CFTV Taubaté            |         4 |          0 |       4 |             NULL |                   NULL | ABAIXO DA MEDIA  |

@@ -10,7 +10,7 @@ SET @fora = (SELECT u.id FROM usuarios u WHERE u.cargo = 'TECNICO' AND u.ativo A
              ORDER BY u.nome LIMIT 1)
 --------------
 
-Query OK, 0 rows affected (0.01 sec)
+Query OK, 0 rows affected (0.00 sec)
 
 --------------
 INSERT INTO relatorios (trabalho_realizado, materiais_utilizados, outros_detalhes, ticket_id, autor_id)
